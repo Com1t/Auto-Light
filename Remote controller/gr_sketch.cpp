@@ -86,6 +86,8 @@ void setup() {
 	digitalWrite(LED_RED, HIGH);
 	digitalWrite(LED_GREEN, HIGH);
 	digitalWrite(LED_BLUE, HIGH);
+	// initialize RC module
+	RC.print("Initialize\n");
 }
 
 void loop() {
@@ -108,7 +110,7 @@ void loop() {
       if( (calculateAbsDiff( lastY[i], readAy, 0.1) | calculateAbsDiff( lastZ[i], readAz, 0.1)) && readAy > 0 || readAz > 0 ){
       	digitalWrite( EN, LOW);
       	delay(1);
-        RC.print("OPEN");
+        RC.print("OPEN\n");
         digitalWrite( LED_GREEN, LOW);
         delay(500);
       } 
