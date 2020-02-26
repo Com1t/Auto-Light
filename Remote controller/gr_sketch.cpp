@@ -28,7 +28,7 @@ int16_t ax, ay, az;
 float lastY[3] = {};
 float lastZ[3] = {};
 
-void getAcceleration( int16_t* x, int16_t* y, int16_t* z);
+void getAcceleration( int16_t &x, int16_t &y, int16_t &z);
 bool calculateAbsDiff( float x, float y, float scale);
 
 void setup() {
@@ -94,7 +94,7 @@ void loop() {
 	// radio module to energy saving mode
 	digitalWrite(EN, HIGH);
     // read raw accel measurements from device
-    getAcceleration( &ax, &ay, &az);
+    getAcceleration( ax, ay, az);
     float readAy = ay;
     float readAz = az;
     readAy = (readAy / 32768) * 39.2;
@@ -102,7 +102,7 @@ void loop() {
     
     if( (calculateAbsDiff( lastY[i], readAy, 0.3) | calculateAbsDiff( lastZ[i], readAz, 0.3)) && readAy > 0  && readAz > 0 ){
       delay(50);
-      getAcceleration( &ax, &ay, &az);
+      getAcceleration( ax, ay, az);
       readAy = ay;
       readAz = az;
       readAy = (readAy / 32768) * 39.2;
@@ -129,14 +129,14 @@ void loop() {
     delay(50);
 }
 
-void getAcceleration( int16_t* x, int16_t* y, int16_t* z){
+void getAcceleration( int16_t &x, int16_t &y, int16_t &z){
   Wire.beginTransmission(devAddr);		// 開啟MPU6050的傳輸
   Wire.write(ACCEL_XOUT_H); 			// 指定暫存器地址
   Wire.requestFrom(devAddr, 6, true); 	// 將輸據讀出到暫存
   Wire.endTransmission(true);			// 關閉傳輸模式
-  *x = Wire.read() << 8 | Wire.read();	// 兩個位元組，組成一個16位整數
-  *y = Wire.read() << 8 | Wire.read();	// 兩個位元組，組成一個16位整數
-  *z = Wire.read() << 8 | Wire.read();	// 兩個位元組，組成一個16位整數
+  x = Wire.read() << 8 | Wire.read();	// 兩個位元組，組成一個16位整數
+  y = Wire.read() << 8 | Wire.read();	// 兩個位元組，組成一個16位整數
+  z = Wire.read() << 8 | Wire.read();	// 兩個位元組，組成一個16位整數
 }
 
 bool calculateAbsDiff( float x, float y, float scale){
