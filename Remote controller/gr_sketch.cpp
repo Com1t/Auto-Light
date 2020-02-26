@@ -10,6 +10,8 @@
 #define ACCEL_ZOUT_H 0x3F
 #define PWR_MGMT_1 0x6B
 #define PWR_MGMT_2 0x6C
+// radio module control pin
+#define EN 11
 // Pin 22,23,24 are assigned to RGB LEDs.
 #define LED_RED    22 // LOW active
 #define LED_GREEN  23 // LOW active
@@ -24,6 +26,7 @@ void getAcceleration( int16_t* x, int16_t* y, int16_t* z);
 bool calculateAbsDiff( float x, float y, float scale);
 
 void setup() {
+	Serial2.begin(9600);
     Wire.begin();
     // wake up
     Wire.beginTransmission(devAddr);	// 開啟MPU6050的傳輸
@@ -51,6 +54,8 @@ void setup() {
     Wire.write(B01000111);
     Wire.endTransmission(true);
     setPowerManagementMode(PM_STOP_MODE);	//set KURUMI to STOP_MODE
+    // initialize radio module control pin
+	pinMode(EN,OUTPUT);
     // initialize led pins
     pinMode(LED_RED, OUTPUT);
   	pinMode(LED_GREEN, OUTPUT);
@@ -75,10 +80,11 @@ void setup() {
 	digitalWrite(LED_RED, HIGH);
 	digitalWrite(LED_GREEN, HIGH);
 	digitalWrite(LED_BLUE, HIGH);
-	Serial.println("Testing device connections...");
 }
 
 void loop() {
+	// radio module to energy saving mode
+	digitalWrite(EN, HIGH);
     // read raw accel measurements from device
     getAcceleration( &ax, &ay, &az);
     float readAy = ay;
@@ -94,6 +100,9 @@ void loop() {
       readAy = (readAy / 32768) * 39.2;
       readAz = (readAz / 32768) * 39.2;
       if( (calculateAbsDiff( lastY[i], readAy, 0.1) | calculateAbsDiff( lastZ[i], readAz, 0.1)) && readAy > 0 || readAz > 0 ){
+      	digitalWrite( EN, LOW);
+      	delay(1);
+        Serial2.print("OPEN");
         digitalWrite( LED_GREEN, LOW);
         delay(500);
       } 
