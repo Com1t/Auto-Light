@@ -102,7 +102,7 @@ void loop() {
       if( (calculateAbsDiff( lastY[i], readAy, 0.1) | calculateAbsDiff( lastZ[i], readAz, 0.1)) && readAy > 0 || readAz > 0 ){
       	digitalWrite( EN, LOW);
       	delay(1);
-        Serial2.print("OPEN");
+        Serial2.print("OPEN"); 
         digitalWrite( LED_GREEN, LOW);
         delay(500);
       } 
