@@ -1,5 +1,6 @@
 /*GR-KURUMI Sketch Template Version: V2.02*/
 #include <Arduino.h>
+#include <SoftwareSerial.h>
 #include <Wire.h>
 
 #define devAddr 0x68
@@ -16,6 +17,11 @@
 #define LED_RED    22 // LOW active
 #define LED_GREEN  23 // LOW active
 #define LED_BLUE   24 // LOW active
+// Pin 9, 10 are tx rx pins
+#define TX 10
+#define RX 9
+
+SoftwareSerial RC(TX,RX);   //RX TX
 
 int8_t i = 0;
 int16_t ax, ay, az;
@@ -26,7 +32,7 @@ void getAcceleration( int16_t* x, int16_t* y, int16_t* z);
 bool calculateAbsDiff( float x, float y, float scale);
 
 void setup() {
-	Serial2.begin(9600);
+	RC.begin(9600);
     Wire.begin();
     // wake up
     Wire.beginTransmission(devAddr);	// 開啟MPU6050的傳輸
@@ -102,7 +108,7 @@ void loop() {
       if( (calculateAbsDiff( lastY[i], readAy, 0.1) | calculateAbsDiff( lastZ[i], readAz, 0.1)) && readAy > 0 || readAz > 0 ){
       	digitalWrite( EN, LOW);
       	delay(1);
-        Serial2.print("OPEN"); 
+        RC.print("OPEN");
         digitalWrite( LED_GREEN, LOW);
         delay(500);
       } 
