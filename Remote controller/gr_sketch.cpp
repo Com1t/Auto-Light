@@ -25,32 +25,33 @@ bool calculateAbsDiff( float x, float y, float scale);
 
 void setup() {
     Wire.begin();
-    //wake up
-    Wire.beginTransmission(devAddr);//開啟MPU6050的傳輸
-    Wire.write(PWR_MGMT_1);     	//指定暫存器地址
-    Wire.write(0);              	//寫入一個位元組的數據
-    Wire.endTransmission(true); 	//結束傳輸，true表示釋放匯流排
-    //set to cycle and disable temperature sensor and set clock source
+    // wake up
+    Wire.beginTransmission(devAddr);	// 開啟MPU6050的傳輸
+    Wire.write(PWR_MGMT_1);     		// 指定暫存器地址
+    Wire.write(0);              		// 寫入一個位元組的數據
+    Wire.endTransmission(true); 		// 結束傳輸，true表示釋放匯流排
+    // set to cycle and disable temperature sensor and set clock source
     Wire.beginTransmission(devAddr);
     Wire.write(PWR_MGMT_1);
     Wire.write(B00101001);
     Wire.endTransmission(true);
-    //set gyro scale
+    // set gyro scale
     Wire.beginTransmission(devAddr);
     Wire.write(GYRO_CONFIG);
     Wire.write(B00000000);
     Wire.endTransmission(true);
-    //set range to +4g/-4g
+    // set range to +4g/-4g
     Wire.beginTransmission(devAddr);
     Wire.write(ACCEL_CONFIG);
     Wire.write(B00001000);
     Wire.endTransmission(true);
-    //set wake frequency
+    // set wake frequency
     Wire.beginTransmission(devAddr);
     Wire.write(PWR_MGMT_2);
     Wire.write(B01000111);
     Wire.endTransmission(true);
     setPowerManagementMode(PM_STOP_MODE);	//set KURUMI to STOP_MODE
+    // initialize led pins
     pinMode(LED_RED, OUTPUT);
   	pinMode(LED_GREEN, OUTPUT);
   	pinMode(LED_BLUE, OUTPUT);
@@ -58,21 +59,23 @@ void setup() {
 	digitalWrite(LED_RED, LOW);
 	digitalWrite(LED_GREEN, LOW);
 	digitalWrite(LED_BLUE, LOW);
+	delay(300);
 	
 	digitalWrite(LED_RED, HIGH);   // turn the RED LED off, glow sky blue.
-    delay(200);                   // wait 200ms
+    delay(300);                   // wait 200ms
 
     digitalWrite(LED_RED, LOW);    // turn the RED LED on
     digitalWrite(LED_GREEN, HIGH); // turn the GREEN LED off, glow pink.
-    delay(200);                   // wait 200ms
+    delay(300);                   // wait 200ms
 
     digitalWrite(LED_GREEN, LOW);  // turn the GREEN LED on
     digitalWrite(LED_BLUE, HIGH);  // turn the BLUE LED off, glow yellow.
-    delay(200);                   // wait for a second
+    delay(300);                   // wait 300ms
     
 	digitalWrite(LED_RED, HIGH);
 	digitalWrite(LED_GREEN, HIGH);
 	digitalWrite(LED_BLUE, HIGH);
+	Serial.println("Testing device connections...");
 }
 
 void loop() {
@@ -110,13 +113,13 @@ void loop() {
 }
 
 void getAcceleration( int16_t* x, int16_t* y, int16_t* z){
-  Wire.beginTransmission(devAddr);		//開啟MPU6050的傳輸
-  Wire.write(ACCEL_XOUT_H); 			//指定暫存器地址
-  Wire.requestFrom(devAddr, 6, true); 	//將輸據讀出到暫存
-  Wire.endTransmission(true);			//關閉傳輸模式
-  *x = Wire.read() << 8 | Wire.read();	//兩個位元組，組成一個16位整數
-  *y = Wire.read() << 8 | Wire.read();	//兩個位元組，組成一個16位整數
-  *z = Wire.read() << 8 | Wire.read();	//兩個位元組，組成一個16位整數
+  Wire.beginTransmission(devAddr);		// 開啟MPU6050的傳輸
+  Wire.write(ACCEL_XOUT_H); 			// 指定暫存器地址
+  Wire.requestFrom(devAddr, 6, true); 	// 將輸據讀出到暫存
+  Wire.endTransmission(true);			// 關閉傳輸模式
+  *x = Wire.read() << 8 | Wire.read();	// 兩個位元組，組成一個16位整數
+  *y = Wire.read() << 8 | Wire.read();	// 兩個位元組，組成一個16位整數
+  *z = Wire.read() << 8 | Wire.read();	// 兩個位元組，組成一個16位整數
 }
 
 bool calculateAbsDiff( float x, float y, float scale){
