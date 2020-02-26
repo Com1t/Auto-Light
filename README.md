@@ -1,7 +1,8 @@
 # Auto-Light
-Light will be control by a inertial sensor
-# Inertial remote controller
-Using a GR-KURUMI(A more enegy efficient arduino) to manage with
-Inertial sensor(MPU6050)
-Radio module
-While the acceleration is grater than 1G is light LED on
+Auto light is consisted by two parts:
+1. inertial remote controller
+2. control board to control the LED strips
+
+# Inertial remote controller(Still configuring)
+Using a GR-KURUMI(A more enegy efficient arduino) to manage with an inertial sensor(MPU6050).
+While the acceleration is grater than 1G is light LED on.
